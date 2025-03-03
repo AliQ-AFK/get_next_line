@@ -10,29 +10,30 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *store, char *buffer)
 {
-	char	*join;
+	char	*new_store;
 	size_t	i;
 	size_t	j;
 
-	if (!s1 || !s2)
+	if (!store || !buffer)
 		return (NULL);
 	i = 0;
 	j = 0;
-	join = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	if (!join)
+	new_store = malloc(ft_strlen(store) + ft_strlen(buffer));
+	if (!new_store)
 		return (NULL);
-	while (s1[i])
+	while (store[i])
 	{
-		join[i] = s1[i];
+		new_store[i] = store[i];
 		i++;
 	}
-	while (s2[j])
+	while (buffer[j])
 	{
-		join[i + j] = s2[j];
+		new_store[i + j] = buffer[j];
 		j++;
 	}
-	join[i + j] = '\0';
-	return (join);
+	new_store[i + j] = '\0';
+	free (store);
+	return (new_store);
 }

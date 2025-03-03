@@ -3,7 +3,7 @@ char    *get_next_line(int fd)
 {
     static char     *store;
     char    buffer[BUFFER_SIZE + 1];//to prevent seg fualt
-    size_t     read_bytes; // for
+    ssize_t     read_bytes; // ssize_t is signed as read can retrun -1
 
     if (fd < 0 || BUFFER_SIZE <=0)
         return (NULL);
@@ -11,6 +11,7 @@ char    *get_next_line(int fd)
     //it returns the number of bytes read and since it starts a t 0 the number of bytes read will be the '\0'
     {
         buffer[read_bytes] = '\0';
+        *store = 'test'; 
         // todo add the buffer to the static var
         //check if \n is there 
         // return upthe string before \n
