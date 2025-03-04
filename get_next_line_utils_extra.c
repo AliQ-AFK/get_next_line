@@ -6,9 +6,11 @@
 /*   By: aqeblawi <aqeblawi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:38:48 by aqeblawi          #+#    #+#             */
-/*   Updated: 2025/03/05 00:57:39 by aqeblawi         ###   ########.fr       */
+/*   Updated: 2025/03/05 00:58:59 by aqeblawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "get_next_line.h"
 
 char	*update_store(char *store, char *line, size_t index)
 {
