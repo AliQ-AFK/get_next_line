@@ -16,11 +16,12 @@ char	*ft_strjoin(char *store, char *buffer)
 	size_t	i;
 	size_t	j;
 
-	if (!store || !buffer)
+	if (!buffer)
 		return (NULL);
 	i = 0;
 	j = 0;
-	new_store = malloc(ft_strlen(store) + ft_strlen(buffer) + 1);
+	if (store)
+		new_store = malloc(ft_strlen(store) + ft_strlen(buffer) + 1);
 	if (!new_store)
 		return (NULL);
 	while (store[i])
@@ -38,50 +39,52 @@ char	*ft_strjoin(char *store, char *buffer)
 	return (new_store);
 }
 
-size_t 	index(const char *store)
+int	index(const char *store)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
 	if (!store)
-		return (NULL);
+		return (-1);
 	while (store[i])
 	{
 		if (store[i] == '\n')
 			return (i);
 		i++;
 	}
-	else
-		return (-1);
+	return (-1);
 }
 
 //retrun a string allocated with malloc and delelte the string froimt the static string 
 
 char	*line(const char *store, size_t index)
 {
-	const char	*line;
-	size_t	i;
+	char	*line;
+	int	i;
 
+	i = 0;
 	if (index > -1)
 	{
-		i = 0;
-		line = malloc(index + 1);// the index of the \n already allocats the null termiantor hello\0 = 6 bytes, counting hello\n is 5 so we need + 1
-		while (i < index)
+		// Allocate memory for the extracted line, including:
+		// - `index + 1` for all characters up to and including `\n`
+		// - `+1` for the null terminator `\0` to ensure a valid C string
+		line = malloc(index + 2);// for the \n and \0
+		if (!line)
+			return (NULL);
+		while (i <= index)// = for copying \n
 		{
 			line[i] = store[i];
-			i++:
+			i++;
 		}
-		line[index] = '\0';
+		line[i] = '\0';
 		return (line);
 	}
-	else
-		return (NULL);
+	return (NULL);
 }
 
-char	*remove(const char *store, const char *line, size_t index)
+char	*update_store(char *store, char *line, size_t index)
 {
-	const char *new_store;
-
+	char *new_store;
 	size_t store_len;
 	size_t	line_len;
 	size_t	i;
@@ -90,15 +93,28 @@ char	*remove(const char *store, const char *line, size_t index)
 	index ++;//as index = \n	
 	line_len = ft_strlen(line); 
 	store_len = ft_strlen(store);
-	new_store = malloc(store_len - line_len);// the \n allocates space for the \0	
-	while (i < (store_len - line_len))//hello= 5, hello\nWorld! = 12; 12 - 5 = 7 -> World!\0
+	if (store_len - line_len <= 0)//even in edge cases malloc wont alloact neagtives!
 	{
-		remove[i] = store[index + i];
+		free(store);
+		return (NULL);
+	}
+	// Allocate memory for the remaining part of `store`, excluding the extracted line.
+	// - `store_len - line_len` accounts for the remaining characters after `\n`
+	// - `+1` ensures space for the null terminator `\0`
+	new_store = malloc(store_len - line_len + 1);
+	if (!new_store)
+	{
+		free(store);
+		free(line);
+		return (NULL);
+	}	
+	while (i < (store_len - line_len))
+	{
+		new_store[i] = store[index + i];
 		i++;
 	}
-	remove[i + index] = '\0';
-	free(line);
+	new_store[i] = '\0';
 	free(store);
-	return (remove):
+	free(line);
+	return (new_store);
 }
-
