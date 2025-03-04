@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aqeblawi <aqeblawi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/04 22:31:26 by aqeblawi          #+#    #+#             */
+/*   Updated: 2025/03/05 00:57:40 by aqeblawi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 size_t	ft_strlen(const char *str)
@@ -5,7 +17,7 @@ size_t	ft_strlen(const char *str)
 	size_t	i;
 
 	i = 0;
-	if(!str)
+	if (!str)
 		return (0);
 	while (str[i])
 		i++;
@@ -15,25 +27,27 @@ size_t	ft_strlen(const char *str)
 char	*ft_strjoin(char *store, char *buffer)
 {
 	char	*new_store;
-	size_t	i;
-	size_t	j;
+	int	i;
+	int	j;
 
 	if (!buffer)
 		return (NULL);
 	new_store = malloc(ft_strlen(store) + ft_strlen(buffer) + 1);
 	if (!new_store)
 		return (NULL);
-	i = 0;
-	if (store)// Copy `store` only if it exists
+	i = -1;
+	if (store)
 	{
-		while (store[i])
-			new_store[i++] = store[i];
-		free(store); // Free old store after copying
+		while (store[++i])
+			new_store[i] = store[i];
+		free(store);
 	}
+	else
+		i = 0;
 	j = 0;
 	while (buffer[j])
 		new_store[i++] = buffer[j++];
-	new_store[i] = '\0'; // Null-terminate the string
+	new_store[i] = '\0';
 	return (new_store);
 }
 
@@ -53,23 +67,18 @@ int	index(const char *store)
 	return (-1);
 }
 
-//retrun a string allocated with malloc and delelte the string froimt the static string 
-
 char	*line(const char *store, size_t index)
 {
 	char	*line;
-	int	i;
+	int		i;
 
 	i = 0;
 	if (index > -1)
 	{
-		// Allocate memory for the extracted line, including:
-		// - `index + 1` for all characters up to and including `\n`
-		// - `+1` for the null terminator `\0` to ensure a valid C string
-		line = malloc(index + 2);// for the \n and \0
+		line = malloc(index + 2);
 		if (!line)
 			return (NULL);
-		while (i <= index)// = for copying \n
+		while (i <= index)
 		{
 			line[i] = store[i];
 			i++;
@@ -80,43 +89,20 @@ char	*line(const char *store, size_t index)
 	return (NULL);
 }
 
-
 void	*free_helper(int flag, char *store, char *line, char *new_store)
 {
-	if (flag == 1) // Free only store
+	if (flag == 1)
 		free(store);
-	else if (flag == 2) // Free both store and line
+	else if (flag == 2)
 	{
 		free(store);
 		free(line);
 	}
-	else if (flag == 3) // Free store, line, and return new_store
+	else if (flag == 3)
 	{
 		free(store);
 		free(line);
 		return (new_store);
 	}
 	return (NULL);
-}
-
-char	*update_store(char *store, char *line, size_t index)
-{
-	char	*new_store;
-	size_t	store_len;
-	size_t	line_len;
-	size_t	i;
-
-	i = 0;
-	index++; // As index = '\n'
-	line_len = strlen(line);
-	store_len = strlen(store);
-	if (store_len - line_len <= 0) // Prevents negative malloc sizes
-		return (free_helper(1, store, NULL, NULL));
-	new_store = malloc(store_len - line_len + 1);
-	if (!new_store)
-		return (free_helper(2, store, line, NULL));
-	while (i < (store_len - line_len))
-		new_store[i++] = store[index + i];
-	new_store[i] = '\0';
-	return (free_helper(3, store, line, new_store));
 }
