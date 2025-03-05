@@ -3,17 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aqeblawi <aqeblawi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aqeblawi <aqeblawi@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/03 12:25:17 by yourname          #+#    #+#             */
-/*   Updated: 2025/03/05 20:39:50 by aqeblawi         ###   ########.fr       */
+/*   Created: 2025/03/05 22:05:05 by aqeblawi          #+#    #+#             */
+/*   Updated: 2025/03/05 22:05:32 by aqeblawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "get_next_line.h"
-
-#include <stdlib.h>
 
 void	*ft_calloc(size_t count, size_t size)
 {

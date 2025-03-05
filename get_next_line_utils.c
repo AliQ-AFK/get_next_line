@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aqeblawi <aqeblawi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aqeblawi <aqeblawi@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/03 13:33:09 by yourname          #+#    #+#             */
-/*   Updated: 2025/03/05 20:39:52 by aqeblawi         ###   ########.fr       */
+/*   Created: 2025/03/05 22:06:18 by aqeblawi          #+#    #+#             */
+/*   Updated: 2025/03/05 22:06:22 by aqeblawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,5 +97,3 @@ char	*ft_strchr(const char *s, int c)
 		return ((char *)s);
 	return (NULL);
 }
-
-
