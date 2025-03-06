@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: aqeblawi <aqeblawi@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/05 22:05:05 by aqeblawi          #+#    #+#             */
-/*   Updated: 2025/03/05 22:05:32 by aqeblawi         ###   ########.fr       */
+/*   Created: 2025/03/06 18:10:51 by aqeblawi          #+#    #+#             */
+/*   Updated: 2025/03/06 18:19:40 by aqeblawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	join[i + j] = '\0';
 	return (join);
 }
+
 static char	*extract_remainder(char *full_line)
 {
 	size_t	i;
@@ -50,7 +51,7 @@ static char	*extract_remainder(char *full_line)
 		return (NULL);
 	rest = ft_substr(full_line, i + 1, ft_strlen(full_line) - i - 1);
 	if (!rest)
-		return (NULL);  // Removed redundant free(rest);
+		return (NULL);
 	full_line[i + 1] = '\0';
 	return (rest);
 }
@@ -71,12 +72,14 @@ static char	*read_and_store(int fd, char *remainder, char *buffer)
 {
 	int		bytes_read;
 
-	while ((bytes_read = read(fd, buffer, BUFFER_SIZE)) > 0)
+	bytes_read = read(fd, buffer, BUFFER_SIZE);
+	while (bytes_read > 0)
 	{
 		buffer[bytes_read] = '\0';
 		remainder = update_remainder(remainder, buffer);
 		if (!remainder || ft_strchr(buffer, '\n'))
-			break;
+			break ;
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
 	}
 	if (bytes_read == -1)
 	{

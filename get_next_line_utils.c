@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: aqeblawi <aqeblawi@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/05 22:06:18 by aqeblawi          #+#    #+#             */
-/*   Updated: 2025/03/05 22:06:22 by aqeblawi         ###   ########.fr       */
+/*   Created: 2025/03/06 18:20:20 by aqeblawi          #+#    #+#             */
+/*   Updated: 2025/03/06 18:20:31 by aqeblawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ size_t	ft_strlen(const char *str)
 		i++;
 	return (i);
 }
+
 size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 {
 	size_t	src_size;
