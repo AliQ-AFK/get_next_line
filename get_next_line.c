@@ -12,83 +12,99 @@
 
 #include "get_next_line.h"
 
-void	*ft_calloc(size_t count, size_t size)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
+	char	*join;
 	size_t	i;
-	char	*ptr;
+	size_t	j;
 
-	ptr = malloc(count * size);
-	if (!ptr)
+	if (!s1 || !s2)
 		return (NULL);
 	i = 0;
-	while (i < count * size)
+	j = 0;
+	join = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!join)
+		return (NULL);
+	while (s1[i])
 	{
-		ptr[i] = 0;
+		join[i] = s1[i];
 		i++;
 	}
-	return ((void *)ptr);
+	while (s2[j])
+	{
+		join[i + j] = s2[j];
+		j++;
+	}
+	join[i + j] = '\0';
+	return (join);
 }
-
-static char	*extract_remainder(char *line)
+static char	*extract_remainder(char *full_line)
 {
 	size_t	i;
-	char	*leftover;
+	char	*rest;
 
 	i = 0;
-	while (line[i] && line[i] != '\n')
+	while (full_line[i] != '\n' && full_line[i] != '\0')
 		i++;
-	if (!line[i] || !line[i + 1])
+	if (full_line[i] == '\0' || full_line[i + 1] == '\0')
 		return (NULL);
-	leftover = ft_substr(line, i + 1, ft_strlen(line) - i - 1);
-	if (!leftover)
-		return (NULL);
-	line[i + 1] = '\0';
-	return (leftover);
+	rest = ft_substr(full_line, i + 1, ft_strlen(full_line) - i - 1);
+	if (!rest)
+		return (NULL);  // Removed redundant free(rest);
+	full_line[i + 1] = '\0';
+	return (rest);
 }
 
-static char	*read_and_append(int fd, char *saved_data)
+static char	*update_remainder(char *remainder, char *buffer)
 {
-	int		bytes_read;
-	char	buffer[BUFFER_SIZE + 1];
 	char	*temp;
 
-	bytes_read = 1;
-	while (bytes_read > 0)
+	if (!remainder)
+		remainder = ft_strdup("");
+	temp = remainder;
+	remainder = ft_strjoin(temp, buffer);
+	free(temp);
+	return (remainder);
+}
+
+static char	*read_and_store(int fd, char *remainder, char *buffer)
+{
+	int		bytes_read;
+
+	while ((bytes_read = read(fd, buffer, BUFFER_SIZE)) > 0)
 	{
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read == -1)
-		{
-			free(saved_data);
-			return (NULL);
-		}
-		if (bytes_read == 0)
-			break ;
 		buffer[bytes_read] = '\0';
-		temp = saved_data;
-		if (!saved_data)
-			saved_data = ft_strdup("");
-		saved_data = ft_strjoin(temp, buffer);
-		free(temp);
-		if (ft_strchr(buffer, '\n'))
-			break ;
+		remainder = update_remainder(remainder, buffer);
+		if (!remainder || ft_strchr(buffer, '\n'))
+			break;
 	}
-	return (saved_data);
+	if (bytes_read == -1)
+	{
+		free(remainder);
+		return (NULL);
+	}
+	return (remainder);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*saved_data;
-	char		*line;
+	static char	*remainder;
+	char		*full_line;
+	char		*buffer;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 	{
-		free(saved_data);
-		saved_data = NULL;
+		free(remainder);
+		remainder = NULL;
 		return (NULL);
 	}
-	line = read_and_append(fd, saved_data);
-	if (!line)
+	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buffer)
 		return (NULL);
-	saved_data = extract_remainder(line);
-	return (line);
+	full_line = read_and_store(fd, remainder, buffer);
+	free(buffer);
+	if (!full_line)
+		return (NULL);
+	remainder = extract_remainder(full_line);
+	return (full_line);
 }
